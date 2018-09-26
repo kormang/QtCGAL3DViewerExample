@@ -1,32 +1,36 @@
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/convex_hull_2.h>
+#include <CGAL/convex_hull_3.h>
 #include <vector>
 #include <QApplication>
 #include "Viewer.h"
 
-
-typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
-typedef K::Point_2 Point_2;
-typedef std::vector<Point_2> Points;
-
 int main(int argc, char** argv)
 {
 	QApplication application(argc, argv);
-	Points points, result;
-	points.push_back(Point_2(0, 0));
-	points.push_back(Point_2(10, 0));
-	points.push_back(Point_2(10, 10));
-	points.push_back(Point_2(6, 5));
-	points.push_back(Point_2(4, 1));
-	CGAL::convex_hull_2(points.begin(), points.end(), std::back_inserter(result));
-	std::cout << result.size() << " points on the convex hull" << std::endl;
-	for (int i = 0; i < result.size(); ++i)
-	{
-		std::cout << result[i].x() << " " << result[i].y() << std::endl;
+	Points points;
+	points.push_back(Point_3(0, 0, 0));
+	points.push_back(Point_3(10, 0, 0));
+	points.push_back(Point_3(10, 10, 0));
+	points.push_back(Point_3(0, 10, 0));
+	points.push_back(Point_3(0, 0, 8));
+	points.push_back(Point_3(10, 0, 8));
+	points.push_back(Point_3(10, 10, 8));
+	points.push_back(Point_3(0, 10, 8));
+	points.push_back(Point_3(6, 5, 3));
+	points.push_back(Point_3(4, 1, 4));
+
+	Surface_mesh result;
+	CGAL::convex_hull_3(points.begin(), points.end(), result);
+
+	std::cout << "The convex hull contains " << num_vertices(result) << " vertices" << std::endl;
+
+	for (auto p : points) {
+		std::cout << p << std::endl;
 	}
+
 	Viewer viewer;
-	viewer.points = points;
-	viewer.result = result;
+	viewer.setPoints(points);
+	viewer.setMesh(result);
 	viewer.setWindowTitle("simpleViewer");
 	viewer.show();
 	return application.exec();

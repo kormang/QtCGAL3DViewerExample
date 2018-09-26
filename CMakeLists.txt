@@ -35,6 +35,7 @@ find_library(QGLVIEWER_LIB NAMES ${CMAKE_SHARED_LIBRARY_PREFIX}QGLViewer${CMAKE_
 set(QGLVIEWER_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../libQGLViewer-2.7.1/QGLViewer/" CACHE PATH "Path to QGLViewer include files")
 
 find_package(OpenGL REQUIRED)
+#find_package(QGLViewer REQUIRED)
 
 set(SOURCES main.cpp Viewer.cpp)
 set(HEADERS Viewer.h)
@@ -47,4 +48,4 @@ target_link_libraries(Convex_hull
     ${QGLVIEWER_LIB}
     ${OPENGL_LIBRARIES}
 )
-target_include_directories(Convex_hull PUBLIC ${QGLVIEWER_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
+target_include_directories(Convex_hull PUBLIC ${OPENGL_INCLUDE_DIR} ${QGLVIEWER_INCLUDE_DIR})

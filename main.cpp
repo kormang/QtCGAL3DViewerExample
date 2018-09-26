@@ -1,6 +1,9 @@
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/convex_hull_2.h>
 #include <vector>
+#include <QApplication>
+#include "Viewer.h"
+
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 typedef K::Point_2 Point_2;
@@ -8,6 +11,7 @@ typedef std::vector<Point_2> Points;
 
 int main(int argc, char** argv)
 {
+	QApplication application(argc, argv);
 	Points points, result;
 	points.push_back(Point_2(0, 0));
 	points.push_back(Point_2(10, 0));
@@ -20,5 +24,10 @@ int main(int argc, char** argv)
 	{
 		std::cout << result[i].x() << " " << result[i].y() << std::endl;
 	}
-	return 0;
+	Viewer viewer;
+	viewer.points = points;
+	viewer.result = result;
+	viewer.setWindowTitle("simpleViewer");
+	viewer.show();
+	return application.exec();
 }

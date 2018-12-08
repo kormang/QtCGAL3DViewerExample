@@ -99,6 +99,8 @@
     <addaction name="actionGenerate_cube"/>
     <addaction name="actionGenerate_sphere"/>
     <addaction name="separator"/>
+    <addaction name="actionShow_convex_hull"/>
+    <addaction name="separator"/>
     <addaction name="actionClear_all_points"/>
    </widget>
    <addaction name="menuFile"/>
@@ -128,6 +130,11 @@
   <action name="actionClear_all_points">
    <property name="text">
     <string>Clear all points</string>
+   </property>
+  </action>
+  <action name="actionShow_convex_hull">
+   <property name="text">
+    <string>Show convex hull</string>
    </property>
   </action>
  </widget>

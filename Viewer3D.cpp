@@ -56,6 +56,20 @@ void Viewer3D::generateSphere(const Point_3& center, float radius)
 
 void Viewer3D::draw()
 {
+	glLineWidth(10.0f);
+	glColor4f(0.5f, 0.0f, 0.0f, 0.5f);
+	BOOST_FOREACH(Surface_mesh::Face_index f, faces(mesh)) {
+		glBegin(GL_LINE_LOOP);
+		CGAL::Vertex_around_face_iterator<Surface_mesh> vbegin, vend;
+		for (boost::tie(vbegin, vend) = vertices_around_face(mesh.halfedge(f), mesh);
+				vbegin != vend;
+				++vbegin) {
+			const Point_3& p = mesh.point(*vbegin);
+			glVertex3f(p.x(), p.y(), p.z());
+		}
+		glEnd();
+	}
+
 	glPointSize(10.0f);
 	glColor3f(0.0f, 1.0f, 0.0f);
 	glBegin(GL_POINTS);
@@ -108,4 +122,9 @@ void Viewer3D::initializeGL()
 
 	this->camera()->setPosition(qglviewer::Vec(0, 0, 1.0));
 	this->camera()->lookAt(qglviewer::Vec(0, 0, 0));
+}
+
+void Viewer3D::setSurfaceMesh(const Surface_mesh& mesh)
+{
+	this->mesh = mesh;
 }

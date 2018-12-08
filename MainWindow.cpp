@@ -2,13 +2,17 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 
-MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWindow) {
+#include <CGAL/Surface_mesh.h>
+#include <CGAL/convex_hull_3.h>
+
+MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWindow), convexHullShown(false) {
     ui->setupUi(this);
     connect(this->ui->actionExit, SIGNAL(triggered()), this, SLOT(slotExit()));
     connect(this->ui->btnAddPoint, SIGNAL(clicked()), this, SLOT(slotAddPoint()));
     connect(this->ui->actionClear_all_points, SIGNAL(triggered()), this, SLOT(slotClearPoints()));
     connect(this->ui->actionGenerate_sphere, SIGNAL(triggered()), this, SLOT(slotGenerateSphere()));
     connect(this->ui->actionGenerate_cube, SIGNAL(triggered()), this, SLOT(slotGenerateCube()));
+    connect(this->ui->actionShow_convex_hull, SIGNAL(triggered()), this, SLOT(slotShowConvexHull()));
 };
 
 void MainWindow::show(){
@@ -65,6 +69,22 @@ void MainWindow::slotGenerateSphere()
     if (success) {
         ui->widget->generateSphere(Point_3(x, y, z), 0.15);
     }
+}
+
+void MainWindow::slotShowConvexHull()
+{
+    Surface_mesh result;
+    if (convexHullShown) {
+        ui->actionShow_convex_hull->setText(tr("Show convex hull"));
+        convexHullShown = false;
+    } else {
+        const auto points = ui->widget->getPoints();
+        CGAL::convex_hull_3(points.begin(), points.end(), result);
+        ui->actionShow_convex_hull->setText(tr("Hide convex hull"));
+        convexHullShown = true;
+    }
+    ui->widget->setSurfaceMesh(result);
+
 }
 
 MainWindow::~MainWindow()

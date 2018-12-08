@@ -17,7 +17,7 @@ public:
 private:
     Ui::MainWindow* ui;
     void readPointFromTextBoxes(bool* success, float* x, float* y, float* z);
-
+    bool convexHullShown;
 
 public slots:
     void slotExit();
@@ -25,4 +25,5 @@ public slots:
     void slotClearPoints();
     void slotGenerateCube();
     void slotGenerateSphere();
+    void slotShowConvexHull();
 };

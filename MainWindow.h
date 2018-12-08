@@ -16,8 +16,13 @@ public:
     void show();
 private:
     Ui::MainWindow* ui;
+    void readPointFromTextBoxes(bool* success, float* x, float* y, float* z);
+
 
 public slots:
     void slotExit();
     void slotAddPoint();
+    void slotClearPoints();
+    void slotGenerateCube();
+    void slotGenerateSphere();
 };

@@ -20,10 +20,13 @@ protected:
 	virtual void draw();
 	virtual void init();
 	virtual void initializeGL();
+	virtual void postSelection(const QPoint& point);
 
 public:
 	Viewer3D(QWidget* parent): QGLViewer(parent) {}
 
 	void addPoint(float x, float y, float z);
 	void clearPoints();
+	void generateCube(const Point_3& center, float sideSize);
+	void generateSphere(const Point_3& center, float radius);
 };

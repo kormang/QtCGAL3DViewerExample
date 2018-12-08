@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
-project(3D_Viewer CXX)
+project(QtCGAL3DViewer CXX)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
@@ -42,12 +42,12 @@ set(SOURCES main.cpp Viewer3D.cpp MainWindow.cpp)
 set(HEADERS Viewer3D.h MainWindow.h)
 qt5_wrap_ui(UI_HEADERS mainwindow.ui)
 
-add_executable(3D_Viewer ${SOURCES} ${HEADERS} ${UI_HEADERS})
-target_link_libraries(3D_Viewer
+add_executable(QtCGAL3DViewer ${SOURCES} ${HEADERS} ${UI_HEADERS})
+target_link_libraries(QtCGAL3DViewer
     PRIVATE
     ${CGAL_LIBS}
     Qt5::Widgets Qt5::Xml Qt5::OpenGL
     ${QGLVIEWER_LIB}
     ${OPENGL_LIBRARIES}
 )
-target_include_directories(3D_Viewer PUBLIC ${OPENGL_INCLUDE_DIR} ${QGLVIEWER_INCLUDE_DIR})
+target_include_directories(QtCGAL3DViewer PUBLIC ${OPENGL_INCLUDE_DIR} ${QGLVIEWER_INCLUDE_DIR})

@@ -1,10 +1,14 @@
 #pragma once
 
+#include <array>
+
 #include <QMainWindow>
 
 namespace Ui {
     class MainWindow;
 }
+
+class BSpline;
 
 class MainWindow : public QMainWindow
 {
@@ -18,6 +22,7 @@ private:
     Ui::MainWindow* ui;
     void readPointFromTextBoxes(bool* success, float* x, float* y, float* z);
     bool convexHullShown;
+    std::array<BSpline*, 2> bsplines;
 
 public slots:
     void slotExit();
@@ -26,4 +31,6 @@ public slots:
     void slotGenerateCube();
     void slotGenerateSphere();
     void slotShowConvexHull();
+    void slotShowBSpline3();
+    void slotShowBSpline2();
 };

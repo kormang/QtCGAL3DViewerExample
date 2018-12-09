@@ -2,28 +2,22 @@
 #include <QGLViewer/qglviewer.h>
 #include <Qstring>
 
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/Surface_mesh.h>
-#include <vector>
-
-typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
-typedef K::Point_2 Point_2;
-typedef K::Point_3 Point_3;
-typedef std::vector<Point_2> Points;
-typedef std::vector<Point_3> Points3;
-typedef CGAL::Surface_mesh<Point_3> Surface_mesh;
+#include "typedefs.h"
+#include "BSpline.h"
 
 class Viewer3D : public QGLViewer
 {
 private:
 	Points3 points;
 	Surface_mesh mesh;
+	std::vector<BSpline*> bsplines;
 
 protected:
 	virtual void draw();
 	virtual void init();
 	virtual void initializeGL();
 	virtual void postSelection(const QPoint& point);
+	inline void addPointImpl(float x, float y, float z) { points.push_back(Point_3(x, y, z)); };
 
 public:
 	Viewer3D(QWidget* parent): QGLViewer(parent) {}
@@ -33,6 +27,7 @@ public:
 	void generateCube(const Point_3& center, float sideSize);
 	void generateSphere(const Point_3& center, float radius);
 	const Points3& getPoints() const { return points; };
-	void setSurfaceMesh(const Surface_mesh& mesh);
-
+	void setSurfaceMesh(const Surface_mesh& mesh) { this->mesh = mesh; };
+	void addBSpline(BSpline* bspline);
+	void removeBSpline(BSpline* bspline);
 };

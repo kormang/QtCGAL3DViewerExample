@@ -13,7 +13,7 @@ using namespace std;
 
 void Viewer3D::addPoint(float x, float y, float z)
 {
-	points.push_back(Point_3(x, y, z));
+	addPointImpl(x, y, z);
 	update();
 }
 
@@ -30,7 +30,7 @@ void Viewer3D::generateCube(const Point_3& center, float sideSize)
     std::uniform_real_distribution<> dis(-sideSize/2, sideSize/2);
 
 	for (int i = 0; i < NUMBER_OF_RUNDOM_POINTS; ++i) {
-		addPoint(center.x() + dis(gen), center.y() + dis(gen), center.z() + dis(gen));
+		addPointImpl(center.x() + dis(gen), center.y() + dis(gen), center.z() + dis(gen));
 	}
 	update();
 }
@@ -49,7 +49,7 @@ void Viewer3D::generateSphere(const Point_3& center, float radius)
 		const float x = center.x() + r * sinpolar * cos(azimuth);
 		const float y = center.y() + r * sinpolar * sin(azimuth);
 		const float z = center.z() + r * cos(polar);
-		addPoint(x, y, z);
+		addPointImpl(x, y, z);
 	}
 	update();
 }
@@ -78,6 +78,10 @@ void Viewer3D::draw()
 		glVertex3f(points[i].x(), points[i].y(), points[i].z());
 	}
 	glEnd();
+
+	for (auto bspline : bsplines) {
+		bspline->drawSplineCurve();
+	}
 }
 
 void Viewer3D::postSelection(const QPoint & point)
@@ -124,7 +128,14 @@ void Viewer3D::initializeGL()
 	this->camera()->lookAt(qglviewer::Vec(0, 0, 0));
 }
 
-void Viewer3D::setSurfaceMesh(const Surface_mesh& mesh)
+void Viewer3D::addBSpline(BSpline* bspline)
 {
-	this->mesh = mesh;
+	bsplines.push_back(bspline);
+	update();
+}
+
+void Viewer3D::removeBSpline(BSpline* bspline)
+{
+	bsplines.erase(std::remove(bsplines.begin(), bsplines.end(), bspline));
+	update();
 }

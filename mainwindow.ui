@@ -101,6 +101,9 @@
     <addaction name="separator"/>
     <addaction name="actionShow_convex_hull"/>
     <addaction name="separator"/>
+    <addaction name="actionShow_3rd_degree_BSpline"/>
+    <addaction name="actionShow_2nd_degree_BSpline"/>
+    <addaction name="separator"/>
     <addaction name="actionClear_all_points"/>
    </widget>
    <addaction name="menuFile"/>
@@ -135,6 +138,16 @@
   <action name="actionShow_convex_hull">
    <property name="text">
     <string>Show convex hull</string>
+   </property>
+  </action>
+  <action name="actionShow_3rd_degree_BSpline">
+   <property name="text">
+    <string>Show 3rd degree BSpline</string>
+   </property>
+  </action>
+  <action name="actionShow_2nd_degree_BSpline">
+   <property name="text">
+    <string>Show 2nd degree BSpline</string>
    </property>
   </action>
  </widget>

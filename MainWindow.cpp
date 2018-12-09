@@ -1,11 +1,17 @@
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include "BSpline.h"
 
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/convex_hull_3.h>
 
-MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWindow), convexHullShown(false) {
+MainWindow::MainWindow(QWidget* parent):
+    QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    convexHullShown(false),
+    bsplines({nullptr, nullptr})
+{
     ui->setupUi(this);
     connect(this->ui->actionExit, SIGNAL(triggered()), this, SLOT(slotExit()));
     connect(this->ui->btnAddPoint, SIGNAL(clicked()), this, SLOT(slotAddPoint()));
@@ -13,6 +19,8 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWin
     connect(this->ui->actionGenerate_sphere, SIGNAL(triggered()), this, SLOT(slotGenerateSphere()));
     connect(this->ui->actionGenerate_cube, SIGNAL(triggered()), this, SLOT(slotGenerateCube()));
     connect(this->ui->actionShow_convex_hull, SIGNAL(triggered()), this, SLOT(slotShowConvexHull()));
+    connect(this->ui->actionShow_2nd_degree_BSpline, SIGNAL(triggered()), this, SLOT(slotShowBSpline2()));
+    connect(this->ui->actionShow_3rd_degree_BSpline, SIGNAL(triggered()), this, SLOT(slotShowBSpline3()));
 };
 
 void MainWindow::show(){
@@ -85,6 +93,34 @@ void MainWindow::slotShowConvexHull()
     }
     ui->widget->setSurfaceMesh(result);
 
+}
+
+void MainWindow::slotShowBSpline3()
+{
+    if (bsplines[1] == nullptr) {
+        bsplines[1] = new BSpline(ui->widget->getPoints(), 3);
+        ui->widget->addBSpline(bsplines[1]);
+        ui->actionShow_3rd_degree_BSpline->setText(tr("Hide 3rd degree BSpline"));
+    } else {
+        ui->actionShow_3rd_degree_BSpline->setText(tr("Show 3rd degree BSpline"));
+        ui->widget->removeBSpline(bsplines[1]);
+        delete bsplines[1];
+        bsplines[1] = nullptr;
+    }
+}
+
+void MainWindow::slotShowBSpline2()
+{
+    if (bsplines[0] == nullptr) {
+        bsplines[0] = new BSpline(ui->widget->getPoints(), 2);
+        ui->widget->addBSpline(bsplines[0]);
+        ui->actionShow_2nd_degree_BSpline->setText(tr("Hide 2nd degree BSpline"));
+    } else {
+        ui->actionShow_2nd_degree_BSpline->setText(tr("Show 2nd degree BSpline"));
+        ui->widget->removeBSpline(bsplines[0]);
+        delete bsplines[0];
+        bsplines[0] = nullptr;
+    }
 }
 
 MainWindow::~MainWindow()

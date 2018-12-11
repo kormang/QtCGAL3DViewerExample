@@ -11,6 +11,7 @@ private:
 	Points3 points;
 	Surface_mesh mesh;
 	std::vector<BSpline*> bsplines;
+	int selectedPointIndex;
 
 protected:
 	virtual void draw();
@@ -18,9 +19,12 @@ protected:
 	virtual void initializeGL();
 	virtual void postSelection(const QPoint& point);
 	inline void addPointImpl(float x, float y, float z) { points.push_back(Point_3(x, y, z)); };
+	void mousePressEvent(QMouseEvent *e);
+	void mouseReleaseEvent(QMouseEvent *e);
+	void mouseMoveEvent(QMouseEvent *e);
 
 public:
-	Viewer3D(QWidget* parent): QGLViewer(parent) {}
+	Viewer3D(QWidget* parent): selectedPointIndex(-1), QGLViewer(parent) {}
 
 	void addPoint(float x, float y, float z);
 	void clearPoints();

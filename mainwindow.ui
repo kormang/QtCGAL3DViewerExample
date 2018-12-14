@@ -76,6 +76,32 @@
      <string>0.1</string>
     </property>
    </widget>
+   <widget class="QLineEdit" name="leParam">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>170</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0.2</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>170</y>
+      <width>60</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Size:</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -98,13 +124,14 @@
     </property>
     <addaction name="actionGenerate_cube"/>
     <addaction name="actionGenerate_sphere"/>
+    <addaction name="actionClear_all_points"/>
     <addaction name="separator"/>
     <addaction name="actionShow_convex_hull"/>
     <addaction name="separator"/>
     <addaction name="actionShow_3rd_degree_BSpline"/>
     <addaction name="actionShow_2nd_degree_BSpline"/>
     <addaction name="separator"/>
-    <addaction name="actionClear_all_points"/>
+    <addaction name="actionShow_PNTriangle"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -148,6 +175,11 @@
   <action name="actionShow_2nd_degree_BSpline">
    <property name="text">
     <string>Show 2nd degree BSpline</string>
+   </property>
+  </action>
+  <action name="actionShow_PNTriangle">
+   <property name="text">
+    <string>Show PNTriangle</string>
    </property>
   </action>
  </widget>

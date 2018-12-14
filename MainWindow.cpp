@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include "BSpline.h"
+#include "PNtriangle.h"
 
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/convex_hull_3.h>
@@ -10,7 +11,9 @@ MainWindow::MainWindow(QWidget* parent):
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
 	convexHullShown(false),
-	bsplines({nullptr, nullptr})
+	bsplines({nullptr, nullptr}),
+	singlePNTriangle(nullptr),
+	pnoctahedron({nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr})
 {
 	ui->setupUi(this);
 	connect(this->ui->actionExit, SIGNAL(triggered()), this, SLOT(slotExit()));
@@ -21,6 +24,8 @@ MainWindow::MainWindow(QWidget* parent):
 	connect(this->ui->actionShow_convex_hull, SIGNAL(triggered()), this, SLOT(slotShowConvexHull()));
 	connect(this->ui->actionShow_2nd_degree_BSpline, SIGNAL(triggered()), this, SLOT(slotShowBSpline2()));
 	connect(this->ui->actionShow_3rd_degree_BSpline, SIGNAL(triggered()), this, SLOT(slotShowBSpline3()));
+	connect(this->ui->actionShow_PNTriangle, SIGNAL(triggered()), this, SLOT(slotShowPNTriangle()));
+
 };
 
 void MainWindow::show(){
@@ -65,9 +70,12 @@ void MainWindow::slotGenerateCube()
 	float x, y, z;
 	readPointFromTextBoxes(&success, &x, &y, &z);
 	if (success) {
-		ui->widget->addPoint(x, y, z);
+		float sideSize = QString(ui->leParam->text()).toFloat(&success);
+		if (!success) {
+			sideSize = 0.2;
+		}
+		ui->widget->generateCube(Point_3(x, y, z), sideSize);
 	}
-	ui->widget->generateCube(Point_3(x, y, z), 0.15);
 }
 void MainWindow::slotGenerateSphere()
 {
@@ -75,7 +83,11 @@ void MainWindow::slotGenerateSphere()
 	float x, y, z;
 	readPointFromTextBoxes(&success, &x, &y, &z);
 	if (success) {
-		ui->widget->generateSphere(Point_3(x, y, z), 0.15);
+		float radius = QString(ui->leParam->text()).toFloat(&success);
+		if (!success) {
+			radius = 0.141;
+		}
+		ui->widget->generateSphere(Point_3(x, y, z), radius);
 	}
 }
 
@@ -121,6 +133,21 @@ void MainWindow::slotShowBSpline2()
 		delete bsplines[0];
 		bsplines[0] = nullptr;
 	}
+}
+
+void MainWindow::slotShowPNTriangle()
+{
+	singlePNTriangle = new PNtriangle(
+		// точки
+		Point_3(0.0, 0.3, 0.0),
+		Point_3(-0.15, 0.0, 0.0),
+		Point_3(0.15, 0.0, 0.0),
+		// нормали
+		Point_3(0.0, 0.3, 1.0),
+		Point_3(-0.2, -0.1, 1.0),
+		Point_3(0.2, -0.1, -1.0)
+	);
+	ui->widget->addPNtriangle(singlePNTriangle);
 }
 
 MainWindow::~MainWindow()

@@ -5,6 +5,9 @@
 #include <random>
 #include <cmath>
 
+#include "BSpline.h"
+#include "PNtriangle.h"
+
 constexpr auto PI = 3.14159265358979323846;
 
 using namespace std;
@@ -81,6 +84,10 @@ void Viewer3D::draw()
 	for (auto bspline : bsplines) {
 		bspline->drawSplineCurve();
 	}
+
+	for (auto pntriangle : pntriangles) {
+		pntriangle->drawTriangle();
+	}
 }
 
 void Viewer3D::postSelection(const QPoint & point)
@@ -139,6 +146,18 @@ void Viewer3D::addBSpline(BSpline* bspline)
 void Viewer3D::removeBSpline(BSpline* bspline)
 {
 	bsplines.erase(std::remove(bsplines.begin(), bsplines.end(), bspline));
+	update();
+}
+
+void Viewer3D::addPNtriangle(PNtriangle* pntriangle)
+{
+	pntriangles.push_back(pntriangle);
+	update();
+}
+
+void Viewer3D::removePNtriangle(PNtriangle* pntriangle)
+{
+	pntriangles.erase(std::remove(pntriangles.begin(), pntriangles.end(), pntriangle));
 	update();
 }
 

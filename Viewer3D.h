@@ -3,7 +3,9 @@
 #include <Qstring>
 
 #include "typedefs.h"
-#include "BSpline.h"
+
+class BSpline;
+class PNtriangle;
 
 class Viewer3D : public QGLViewer
 {
@@ -11,6 +13,7 @@ private:
 	Points3 points;
 	Surface_mesh mesh;
 	std::vector<BSpline*> bsplines;
+	std::vector<PNtriangle*> pntriangles;
 	int selectedPointIndex;
 
 protected:
@@ -34,4 +37,6 @@ public:
 	void setSurfaceMesh(const Surface_mesh& mesh) { this->mesh = mesh; };
 	void addBSpline(BSpline* bspline);
 	void removeBSpline(BSpline* bspline);
+	void addPNtriangle(PNtriangle* pntriangle);
+	void removePNtriangle(PNtriangle* pntriangle);
 };

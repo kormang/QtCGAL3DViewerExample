@@ -108,17 +108,17 @@ Point_3 PNtriangle::normalFromBarycentric(double u, double v, double w)
 
 
 PNtriangle::PNtriangle(Point_3 p1, Point_3 p2, Point_3 p3,
-	Point_3 n1, Point_3 n2, Point_3 n3)
+	Point_3 n1, Point_3 n2, Point_3 n3, int tessellationLevel):
+    p300(p1), p030(p2), p003(p3),
+    n200(n1), n020(n2), n002(n3),
+    tessellationLevel(tessellationLevel)
 {
-	p300 = p1; p030 = p2; p003 = p3;
-	n200 = n1; n020 = n2; n002 = n3;
     calcPNcoefs();
 }
 
 void PNtriangle::drawPoint(double u, double v, double w)
 {
     Point_3 p, n;
-
     p = pointFromBarycentric(u, v, w);
     n = normalFromBarycentric(u, v, w);
 	glNormal3f(p.x(), p.y(), p.z());
@@ -129,47 +129,47 @@ void PNtriangle::drawTriangle()
 {
     double u, v, w;
 	glColor3f(1.0, 0.9, 0.5);
-	glBegin(GL_TRIANGLES);
+    glBegin(GL_TRIANGLES);
 
-	//Triangle 1
-	u = 0.0; v = 0.0; w = 1.0;
-    drawPoint(u, v, w);
+    float tes = static_cast<float>(tessellationLevel + 1);
 
-	u = 0.5; v = 0.0; w = 0.5;
-	drawPoint(u, v, w);
-
-	u = 0.0; v = 0.5; w = 0.5;
-	drawPoint(u, v, w);
-
-	//Triangle 2
-	u = 1.0; v = 0.0; w = 0.0;
-	drawPoint(u, v, w);
-
-	u = 0.5; v = 0.5; w = 0.0;
-	drawPoint(u, v, w);
-
-	u = 0.5; v = 0.0; w = 0.5;
-	drawPoint(u, v, w);
-
-	//Triangle 3
-	u = 0.0; v = 1.0; w = 0.0;
-	drawPoint(u, v, w);
-
-	u = 0.0; v = 0.5; w = 0.5;
-	drawPoint(u, v, w);
-
-	u = 0.5; v = 0.5; w = 0.0;
-	drawPoint(u, v, w);
-
-	//Triangle 4
-	u = 0.5; v = 0.5; w = 0.0;
-	drawPoint(u, v, w);
-
-	u = 0.0; v = 0.5; w = 0.5;
-	drawPoint(u, v, w);
-
-	u = 0.5; v = 0.0; w = 0.5;
-	drawPoint(u, v, w);
-
-	glEnd();
+    for (int row = 0; row <= tessellationLevel; ++row) {
+        for (int col = 0; col <= row; ++col) {
+            // glBegin(GL_LINE_LOOP);
+            drawPoint(
+                (tes - row)/tes,
+                (row - col)/tes,
+                (col)/tes
+            );
+            drawPoint(
+                (tes - row - 1)/tes,
+                (row - col + 1)/tes,
+                (col)/tes
+            );
+            drawPoint(
+                (tes - row - 1)/tes,
+                (row - col)/tes,
+                (col + 1)/tes
+            );
+        	// glEnd();
+        }
+        for (int col = 0; col < row; ++col) {
+            drawPoint(
+                (tes - row)/tes,
+                (row - col)/tes,
+                (col)/tes
+            );
+            drawPoint(
+                (tes - row)/tes,
+                (row - col - 1)/tes,
+                (col + 1)/tes
+            );
+            drawPoint(
+                (tes - row - 1)/tes,
+                (row - col)/tes,
+                (col + 1)/tes
+            );
+        }
+    }
+    glEnd();
 }

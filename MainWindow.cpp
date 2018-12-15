@@ -137,17 +137,33 @@ void MainWindow::slotShowBSpline2()
 
 void MainWindow::slotShowPNTriangle()
 {
-	singlePNTriangle = new PNtriangle(
-		// точки
-		Point_3(0.0, 0.3, 0.0),
-		Point_3(-0.15, 0.0, 0.0),
-		Point_3(0.15, 0.0, 0.0),
-		// нормали
-		Point_3(0.0, 0.3, 1.0),
-		Point_3(-0.2, -0.1, 1.0),
-		Point_3(0.2, -0.1, -1.0)
-	);
-	ui->widget->addPNtriangle(singlePNTriangle);
+	if (singlePNTriangle != nullptr) {
+		ui->widget->removePNtriangle(singlePNTriangle);
+		delete singlePNTriangle;
+		singlePNTriangle = nullptr;
+		ui->actionShow_PNTriangle->setText(tr("Show PNTriangle"));
+	} else {
+		bool success = false;
+		int tessLevel = QString(ui->leTessLevel->text()).toInt(&success);
+		if (!success) {
+			tessLevel = 0;
+		}
+		singlePNTriangle = new PNtriangle(
+			// точки
+			Point_3(0.0, 0.26, 0.0),
+			Point_3(-0.15, 0.0, 0.0),
+			Point_3(0.15, 0.0, 0.0),
+			// нормали
+			Point_3(0.0, 0.3, 1.0),
+			Point_3(-0.2, -0.1, 1.0),
+			Point_3(0.2, -0.1, -1.0),
+			// уровень тесселяции
+			tessLevel
+		);
+		ui->widget->addPNtriangle(singlePNTriangle);
+		ui->actionShow_PNTriangle->setText(tr("Hide PNTriangle"));
+	}
+
 }
 
 MainWindow::~MainWindow()

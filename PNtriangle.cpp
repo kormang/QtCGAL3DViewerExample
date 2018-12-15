@@ -72,7 +72,7 @@ void PNtriangle::calcPNcoefs()
 		1.5 * Ez - 0.5 * Vz);
 }
 
-Point_3 PNtriangle::pointFromBarycentric(double u, double v, double w)
+inline Point_3 PNtriangle::pointFromBarycentric(double u, double v, double w)
 {
 	return Point_3(
 		(p300.x() * u + 3 * p210.x() * v + 3 * p201.x() * w) * u * u +
@@ -92,7 +92,7 @@ Point_3 PNtriangle::pointFromBarycentric(double u, double v, double w)
 	);
 }
 
-Point_3 PNtriangle::normalFromBarycentric(double u, double v, double w)
+inline Point_3 PNtriangle::normalFromBarycentric(double u, double v, double w)
 {
 	return Point_3(
 		n200.x() * u * u + n020.x() * v * v + n002.x() * w * w +
@@ -116,7 +116,15 @@ PNtriangle::PNtriangle(Point_3 p1, Point_3 p2, Point_3 p3,
     calcPNcoefs();
 }
 
-void PNtriangle::drawPoint(double u, double v, double w)
+PNtriangle::PNtriangle(Point_3 p1, Point_3 p2, Point_3 p3, int tessellationLevel):
+    p300(p1), p030(p2), p003(p3),
+    n200(normalize(p1)), n020(normalize(p2)), n002(normalize(p3)),
+    tessellationLevel(tessellationLevel)
+{
+    calcPNcoefs();
+}
+
+inline void PNtriangle::drawPoint(double u, double v, double w)
 {
     Point_3 p, n;
     p = pointFromBarycentric(u, v, w);
@@ -131,23 +139,24 @@ void PNtriangle::drawTriangle()
 	glColor3f(1.0, 0.9, 0.5);
     glBegin(GL_TRIANGLES);
 
-    float tes = static_cast<float>(tessellationLevel + 1);
+    const int tesi = tessellationLevel + 1;
+    float tes = static_cast<float>(tesi);
 
     for (int row = 0; row <= tessellationLevel; ++row) {
         for (int col = 0; col <= row; ++col) {
             // glBegin(GL_LINE_LOOP);
             drawPoint(
-                (tes - row)/tes,
+                (tesi - row)/tes,
                 (row - col)/tes,
                 (col)/tes
             );
             drawPoint(
-                (tes - row - 1)/tes,
+                (tesi - row - 1)/tes,
                 (row - col + 1)/tes,
                 (col)/tes
             );
             drawPoint(
-                (tes - row - 1)/tes,
+                (tesi - row - 1)/tes,
                 (row - col)/tes,
                 (col + 1)/tes
             );
@@ -155,17 +164,17 @@ void PNtriangle::drawTriangle()
         }
         for (int col = 0; col < row; ++col) {
             drawPoint(
-                (tes - row)/tes,
+                (tesi - row)/tes,
                 (row - col)/tes,
                 (col)/tes
             );
             drawPoint(
-                (tes - row)/tes,
+                (tesi - row)/tes,
                 (row - col - 1)/tes,
                 (col + 1)/tes
             );
             drawPoint(
-                (tes - row - 1)/tes,
+                (tesi - row - 1)/tes,
                 (row - col)/tes,
                 (col + 1)/tes
             );

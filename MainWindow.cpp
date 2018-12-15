@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget* parent):
 	connect(this->ui->actionShow_2nd_degree_BSpline, SIGNAL(triggered()), this, SLOT(slotShowBSpline2()));
 	connect(this->ui->actionShow_3rd_degree_BSpline, SIGNAL(triggered()), this, SLOT(slotShowBSpline3()));
 	connect(this->ui->actionShow_PNTriangle, SIGNAL(triggered()), this, SLOT(slotShowPNTriangle()));
+	connect(this->ui->actionShow_octahedron_sphere, SIGNAL(triggered()), this, SLOT(slotShowOctahedronSphere()));
 
 };
 
@@ -163,7 +164,67 @@ void MainWindow::slotShowPNTriangle()
 		ui->widget->addPNtriangle(singlePNTriangle);
 		ui->actionShow_PNTriangle->setText(tr("Hide PNTriangle"));
 	}
+}
 
+void MainWindow::slotShowOctahedronSphere()
+{
+	if (pnoctahedron[0] != nullptr) {
+		for (int i = 0; i < 8; ++i) {
+			ui->widget->removePNtriangle(pnoctahedron[i]);
+			delete pnoctahedron[i];
+			pnoctahedron[i] = nullptr;
+		}
+		ui->actionShow_octahedron_sphere->setText(tr("Show octahedron sphere"));
+	} else {
+		bool success = false;
+		int tessLevel = QString(ui->leTessLevel->text()).toInt(&success);
+		if (!success) {
+			tessLevel = 0;
+		}
+		float size = QString(ui->leParam->text()).toFloat(&success);
+		if (!success) {
+			size = 0.0f;
+		}
+		for (int j = 0; j <= 4; j += 4) {
+			float sizez = j == 0 ? size : -size;
+			pnoctahedron[0 + j] = new PNtriangle(
+				// точки
+				Point_3(size, 0.0, 0.0),
+				Point_3(0.0, size, 0.0),
+				Point_3(0.0, 0.0, sizez),
+				// уровень тесселяции
+				tessLevel
+			);
+			pnoctahedron[1 + j] = new PNtriangle(
+				// точки
+				Point_3(0.0, size, 0.0),
+				Point_3(-size, 0.0, 0.0),
+				Point_3(0.0, 0.0, sizez),
+				// уровень тесселяции
+				tessLevel
+			);
+			pnoctahedron[2 + j] = new PNtriangle(
+				// точки
+				Point_3(-size, 0.0, 0.0),
+				Point_3(0.0, -size, 0.0),
+				Point_3(0.0, 0.0, sizez),
+				// уровень тесселяции
+				tessLevel
+			);
+			pnoctahedron[3 + j] = new PNtriangle(
+				// точки
+				Point_3(size, 0.0, 0.0),
+				Point_3(0.0, -size, 0.0),
+				Point_3(0.0, 0.0, sizez),
+				// уровень тесселяции
+				tessLevel
+			);
+		}
+		for (int i = 0; i < 8; ++i) {
+			ui->widget->addPNtriangle(pnoctahedron[i]);
+		}
+		ui->actionShow_octahedron_sphere->setText(tr("Hide octahedron sphere"));
+	}
 }
 
 MainWindow::~MainWindow()

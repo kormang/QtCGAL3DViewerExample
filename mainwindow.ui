@@ -158,6 +158,8 @@
     <addaction name="actionShow_2nd_degree_BSpline"/>
     <addaction name="separator"/>
     <addaction name="actionShow_PNTriangle"/>
+    <addaction name="actionShow_octahedron_sphere"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -206,6 +208,11 @@
   <action name="actionShow_PNTriangle">
    <property name="text">
     <string>Show PNTriangle</string>
+   </property>
+  </action>
+  <action name="actionShow_octahedron_sphere">
+   <property name="text">
+    <string>Show octahedron sphere</string>
    </property>
   </action>
  </widget>

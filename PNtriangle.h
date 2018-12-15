@@ -23,5 +23,6 @@ class PNtriangle
 public:
 	PNtriangle(Point_3 p1, Point_3 p2, Point_3 p3,
 		Point_3 n1, Point_3 n2, Point_3 n3, int tessellationLevel = 0);
+    PNtriangle(Point_3 p1, Point_3 p2, Point_3 p3, int tessellationLevel = 0);
 	void drawTriangle();
 };

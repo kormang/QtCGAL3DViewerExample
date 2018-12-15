@@ -37,4 +37,5 @@ public slots:
 	void slotShowBSpline3();
 	void slotShowBSpline2();
 	void slotShowPNTriangle();
+	void slotShowOctahedronSphere();
 };

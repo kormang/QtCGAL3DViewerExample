@@ -19,6 +19,6 @@ typedef std::vector<double> coefs_t;
 public:
 	bool closed;
 	void drawSplineCurve();
-	BSpline(const Points3& points, int degree, int stepCount = 10, bool closed = false);
+	BSpline(const Points3& points, int degree, bool closed = false, int stepCount = 10);
 	~BSpline(){};
 };

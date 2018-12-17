@@ -111,7 +111,7 @@ void MainWindow::slotShowConvexHull()
 void MainWindow::slotShowBSpline3()
 {
 	if (bsplines[1] == nullptr) {
-		bsplines[1] = new BSpline(ui->widget->getPoints(), 3);
+		bsplines[1] = new BSpline(ui->widget->getPoints(), 3, ui->cbClosed->isChecked());
 		ui->widget->addBSpline(bsplines[1]);
 		ui->actionShow_3rd_degree_BSpline->setText(tr("Hide 3rd degree BSpline"));
 	} else {
@@ -125,7 +125,7 @@ void MainWindow::slotShowBSpline3()
 void MainWindow::slotShowBSpline2()
 {
 	if (bsplines[0] == nullptr) {
-		bsplines[0] = new BSpline(ui->widget->getPoints(), 2);
+		bsplines[0] = new BSpline(ui->widget->getPoints(), 2, ui->cbClosed->isChecked());
 		ui->widget->addBSpline(bsplines[0]);
 		ui->actionShow_2nd_degree_BSpline->setText(tr("Hide 2nd degree BSpline"));
 	} else {

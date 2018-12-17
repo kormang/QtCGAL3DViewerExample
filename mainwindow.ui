@@ -47,7 +47,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>-0.1</string>
+     <string>-0.5</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="leYCoord">
@@ -73,7 +73,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>0.1</string>
+     <string>0.0</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="leParam">
@@ -126,6 +126,19 @@
     </property>
     <property name="text">
      <string>3</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cbClosed">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>270</y>
+      <width>87</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>closed</string>
     </property>
    </widget>
   </widget>

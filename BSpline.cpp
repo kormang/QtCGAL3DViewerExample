@@ -27,13 +27,13 @@ BSpline::coefs_t BSpline::calcSplineCoef2(double t)
 
 	coefs.push_back((1.0 - t) * (1.0 - t) / 2.0);
 	coefs.push_back((-2.0 * t * t + 2.0 * t + 1) / 2.0);
-	coefs.push_back(t * t * t / 2.0);
+	coefs.push_back(t * t / 2.0);
 
 	return coefs;
 }
 
-BSpline::BSpline(const Points3& points, int degree, int stepCount, bool closed)
-: points(points), degree(degree), stepCount(stepCount), closed(closed)
+BSpline::BSpline(const Points3& points, int degree, bool closed, int stepCount)
+: degree(degree), stepCount(stepCount), points(points), closed(closed)
 {
     // Генерация коэффициентов B-сплайна
 	coefs = std::vector<coefs_t>();
@@ -51,10 +51,10 @@ void BSpline::drawSegment3(int segNum)
 	int p0, p1, p2, p3;
 	//Вычисление номеров вершин для построения сплайна
 	if (closed == false) {
-		p0 = clamp(segNum - 1, 0, pNum - 1);
-		p1 = clamp(segNum, 0, pNum - 1);
-		p2 = clamp(segNum + 1, 0, pNum - 1);
-		p3 = clamp(segNum + 2, 0, pNum - 1);
+		p0 = clamp(segNum - 2, 0, pNum - 1);
+		p1 = clamp(segNum - 1, 0, pNum - 1);
+		p2 = clamp(segNum, 0, pNum - 1);
+		p3 = clamp(segNum + 1, 0, pNum - 1);
 	} else {
 		p0 = (segNum - 1 + pNum) % pNum;
 		p1 = (segNum + pNum) % pNum;
@@ -115,24 +115,26 @@ void BSpline::drawSegment2(int segNum)
 void BSpline::drawSplineCurve()
 {
 	int segmentsCount;
+
+	glLineWidth(2.0f);
+	glColor4f(1.0f, 1.0f, 0.33f * degree, 1.0f);
+
 	if (closed == false) {
-		segmentsCount = points.size() - 1;
 		glBegin(GL_LINE_STRIP);
+		segmentsCount = std::max(static_cast<int>(points.size()) + degree - 2, 0);
 	} else {
 		segmentsCount = points.size(); //Сегмент между первой и последней вершиной
 		glBegin(GL_LINE_LOOP);
 	}
-
-	glColor3f(1.0f, 1.0f, 0.33f * degree);
 
     if (degree == 3) {
         for (int i = 0; i < segmentsCount; i++) {
             drawSegment3(i);
         }
     } else {
-       for (int i = 0; i < segmentsCount; i++) {
-            drawSegment2(i);
-        }
+		for (int i = 0; i < segmentsCount; i++) {
+			drawSegment2(i);
+		}
     }
 
 	glEnd();

@@ -8,8 +8,7 @@ namespace Ui {
 	class MainWindow;
 }
 
-class BSpline;
-class PNtriangle;
+class DrawingElement;
 
 class MainWindow : public QMainWindow
 {
@@ -22,10 +21,10 @@ public:
 private:
 	Ui::MainWindow* ui;
 	void readPointFromTextBoxes(bool* success, float* x, float* y, float* z);
-	bool convexHullShown;
-	std::array<BSpline*, 2> bsplines;
-	PNtriangle* singlePNTriangle;
-	std::array<PNtriangle*, 8> pnoctahedron;
+	DrawingElement* convexHull;
+	std::array<DrawingElement*, 2> bsplines;
+	DrawingElement* singlePNTriangle;
+	std::array<DrawingElement*, 8> pnoctahedron;
 
 public slots:
 	void slotExit();

@@ -5,9 +5,6 @@
 #include <random>
 #include <cmath>
 
-#include "BSpline.h"
-#include "PNtriangle.h"
-
 constexpr auto PI = 3.14159265358979323846;
 
 using namespace std;
@@ -59,20 +56,6 @@ void Viewer3D::generateSphere(const Point_3& center, float radius)
 
 void Viewer3D::draw()
 {
-	glLineWidth(10.0f);
-	glColor4f(0.5f, 0.0f, 0.0f, 0.5f);
-	BOOST_FOREACH(Surface_mesh::Face_index f, faces(mesh)) {
-		glBegin(GL_LINE_LOOP);
-		CGAL::Vertex_around_face_iterator<Surface_mesh> vbegin, vend;
-		for (boost::tie(vbegin, vend) = vertices_around_face(mesh.halfedge(f), mesh);
-				vbegin != vend;
-				++vbegin) {
-			const Point_3& p = mesh.point(*vbegin);
-			glVertex3f(p.x(), p.y(), p.z());
-		}
-		glEnd();
-	}
-
 	glPointSize(10.0f);
 	glColor3f(0.0f, 1.0f, 0.0f);
 	glBegin(GL_POINTS);
@@ -81,12 +64,8 @@ void Viewer3D::draw()
 	}
 	glEnd();
 
-	for (auto bspline : bsplines) {
-		bspline->drawSplineCurve();
-	}
-
-	for (auto pntriangle : pntriangles) {
-		pntriangle->drawTriangle();
+	for (auto element : drawingElements) {
+		element->draw();
 	}
 }
 
@@ -137,27 +116,15 @@ void Viewer3D::initializeGL()
 	this->camera()->lookAt(qglviewer::Vec(0, 0, 0));
 }
 
-void Viewer3D::addBSpline(BSpline* bspline)
+void Viewer3D::addElement(DrawingElement* element)
 {
-	bsplines.push_back(bspline);
+	drawingElements.push_back(element);
 	update();
 }
 
-void Viewer3D::removeBSpline(BSpline* bspline)
+void Viewer3D::removeElement(DrawingElement* element)
 {
-	bsplines.erase(std::remove(bsplines.begin(), bsplines.end(), bspline));
-	update();
-}
-
-void Viewer3D::addPNtriangle(PNtriangle* pntriangle)
-{
-	pntriangles.push_back(pntriangle);
-	update();
-}
-
-void Viewer3D::removePNtriangle(PNtriangle* pntriangle)
-{
-	pntriangles.erase(std::remove(pntriangles.begin(), pntriangles.end(), pntriangle));
+	drawingElements.erase(std::remove(drawingElements.begin(), drawingElements.end(), element));
 	update();
 }
 

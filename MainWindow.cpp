@@ -3,14 +3,14 @@
 #include <QMessageBox>
 #include "BSpline.h"
 #include "PNtriangle.h"
-
+#include "DrawingElements.h"
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/convex_hull_3.h>
 
 MainWindow::MainWindow(QWidget* parent):
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
-	convexHullShown(false),
+	convexHull(nullptr),
 	bsplines({nullptr, nullptr}),
 	singlePNTriangle(nullptr),
 	pnoctahedron({nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr})
@@ -94,18 +94,19 @@ void MainWindow::slotGenerateSphere()
 
 void MainWindow::slotShowConvexHull()
 {
-	Surface_mesh result;
-	if (convexHullShown) {
+	Surface_mesh* result = new Surface_mesh;
+	if (convexHull != nullptr) {
+		ui->widget->removeElement(convexHull);
+		delete convexHull;
+		convexHull = nullptr;
 		ui->actionShow_convex_hull->setText(tr("Show convex hull"));
-		convexHullShown = false;
 	} else {
 		const auto points = ui->widget->getPoints();
-		CGAL::convex_hull_3(points.begin(), points.end(), result);
+		CGAL::convex_hull_3(points.begin(), points.end(), *result);
 		ui->actionShow_convex_hull->setText(tr("Hide convex hull"));
-		convexHullShown = true;
+		convexHull = new SurfaceMeshDrawingElement(result);
+		ui->widget->addElement(convexHull);
 	}
-	ui->widget->setSurfaceMesh(result);
-
 }
 
 void MainWindow::slotShowBSpline3()
@@ -116,7 +117,7 @@ void MainWindow::slotShowBSpline3()
 		ui->actionShow_3rd_degree_BSpline->setText(tr("Hide 3rd degree BSpline"));
 	} else {
 		ui->actionShow_3rd_degree_BSpline->setText(tr("Show 3rd degree BSpline"));
-		ui->widget->removeBSpline(bsplines[1]);
+		ui->widget->removeElement(bsplines[1]);
 		delete bsplines[1];
 		bsplines[1] = nullptr;
 	}
@@ -130,7 +131,7 @@ void MainWindow::slotShowBSpline2()
 		ui->actionShow_2nd_degree_BSpline->setText(tr("Hide 2nd degree BSpline"));
 	} else {
 		ui->actionShow_2nd_degree_BSpline->setText(tr("Show 2nd degree BSpline"));
-		ui->widget->removeBSpline(bsplines[0]);
+		ui->widget->removeElement(bsplines[0]);
 		delete bsplines[0];
 		bsplines[0] = nullptr;
 	}
@@ -139,7 +140,7 @@ void MainWindow::slotShowBSpline2()
 void MainWindow::slotShowPNTriangle()
 {
 	if (singlePNTriangle != nullptr) {
-		ui->widget->removePNtriangle(singlePNTriangle);
+		ui->widget->removeElement(singlePNTriangle);
 		delete singlePNTriangle;
 		singlePNTriangle = nullptr;
 		ui->actionShow_PNTriangle->setText(tr("Show PNTriangle"));
@@ -149,7 +150,7 @@ void MainWindow::slotShowPNTriangle()
 		if (!success) {
 			tessLevel = 0;
 		}
-		singlePNTriangle = new PNtriangle(
+		singlePNTriangle = new PNtriangleDrawingElement(new PNtriangle(
 			// точки
 			Point_3(0.0, 0.26, 0.0),
 			Point_3(-0.15, 0.0, 0.0),
@@ -160,8 +161,8 @@ void MainWindow::slotShowPNTriangle()
 			Point_3(0.2, -0.1, -1.0),
 			// уровень тесселяции
 			tessLevel
-		);
-		ui->widget->addPNtriangle(singlePNTriangle);
+		));
+		ui->widget->addElement(singlePNTriangle);
 		ui->actionShow_PNTriangle->setText(tr("Hide PNTriangle"));
 	}
 }
@@ -170,7 +171,7 @@ void MainWindow::slotShowOctahedronSphere()
 {
 	if (pnoctahedron[0] != nullptr) {
 		for (int i = 0; i < 8; ++i) {
-			ui->widget->removePNtriangle(pnoctahedron[i]);
+			ui->widget->removeElement(pnoctahedron[i]);
 			delete pnoctahedron[i];
 			pnoctahedron[i] = nullptr;
 		}
@@ -187,41 +188,41 @@ void MainWindow::slotShowOctahedronSphere()
 		}
 		for (int j = 0; j <= 4; j += 4) {
 			float sizez = j == 0 ? size : -size;
-			pnoctahedron[0 + j] = new PNtriangle(
+			pnoctahedron[0 + j] = new PNtriangleDrawingElement(new PNtriangle(
 				// точки
 				Point_3(size, 0.0, 0.0),
 				Point_3(0.0, size, 0.0),
 				Point_3(0.0, 0.0, sizez),
 				// уровень тесселяции
 				tessLevel
-			);
-			pnoctahedron[1 + j] = new PNtriangle(
+			));
+			pnoctahedron[1 + j] = new PNtriangleDrawingElement(new PNtriangle(
 				// точки
 				Point_3(0.0, size, 0.0),
 				Point_3(-size, 0.0, 0.0),
 				Point_3(0.0, 0.0, sizez),
 				// уровень тесселяции
 				tessLevel
-			);
-			pnoctahedron[2 + j] = new PNtriangle(
+			));
+			pnoctahedron[2 + j] = new PNtriangleDrawingElement(new PNtriangle(
 				// точки
 				Point_3(-size, 0.0, 0.0),
 				Point_3(0.0, -size, 0.0),
 				Point_3(0.0, 0.0, sizez),
 				// уровень тесселяции
 				tessLevel
-			);
-			pnoctahedron[3 + j] = new PNtriangle(
+			));
+			pnoctahedron[3 + j] = new PNtriangleDrawingElement(new PNtriangle(
 				// точки
 				Point_3(size, 0.0, 0.0),
 				Point_3(0.0, -size, 0.0),
 				Point_3(0.0, 0.0, sizez),
 				// уровень тесселяции
 				tessLevel
-			);
+			));
 		}
 		for (int i = 0; i < 8; ++i) {
-			ui->widget->addPNtriangle(pnoctahedron[i]);
+			ui->widget->addElement(pnoctahedron[i]);
 		}
 		ui->actionShow_octahedron_sphere->setText(tr("Hide octahedron sphere"));
 	}
@@ -229,5 +230,24 @@ void MainWindow::slotShowOctahedronSphere()
 
 MainWindow::~MainWindow()
 {
+	if (convexHull != nullptr) {
+		delete convexHull;
+	}
+
+	for (int i = 0; i < bsplines.size(); ++i) {
+		if (bsplines[i] != nullptr) {
+			delete bsplines[i];
+		}
+	}
+
+	if (singlePNTriangle != nullptr) {
+		delete singlePNTriangle;
+	}
+
+	for (int i = 0; i < pnoctahedron.size(); ++i) {
+		if (pnoctahedron[i] != nullptr) {
+			delete pnoctahedron[i];
+		}
+	}
 	delete ui;
 }

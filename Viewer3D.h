@@ -4,16 +4,18 @@
 
 #include "typedefs.h"
 
-class BSpline;
-class PNtriangle;
+class DrawingElement
+{
+public:
+	virtual void draw() = 0;
+	virtual ~DrawingElement() {};
+};
 
 class Viewer3D : public QGLViewer
 {
 private:
 	Points3 points;
-	Surface_mesh mesh;
-	std::vector<BSpline*> bsplines;
-	std::vector<PNtriangle*> pntriangles;
+	std::vector<DrawingElement*> drawingElements;
 	int selectedPointIndex;
 
 protected:
@@ -34,9 +36,6 @@ public:
 	void generateCube(const Point_3& center, float sideSize);
 	void generateSphere(const Point_3& center, float radius);
 	const Points3& getPoints() const { return points; };
-	void setSurfaceMesh(const Surface_mesh& mesh) { this->mesh = mesh; };
-	void addBSpline(BSpline* bspline);
-	void removeBSpline(BSpline* bspline);
-	void addPNtriangle(PNtriangle* pntriangle);
-	void removePNtriangle(PNtriangle* pntriangle);
+	void addElement(DrawingElement* element);
+	void removeElement(DrawingElement* element);
 };

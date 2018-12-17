@@ -115,10 +115,8 @@ void BSpline::drawSegment2(int segNum)
 void BSpline::drawSplineCurve()
 {
 	int segmentsCount;
-
 	glLineWidth(2.0f);
 	glColor4f(1.0f, 1.0f, 0.33f * degree, 1.0f);
-
 	if (closed == false) {
 		glBegin(GL_LINE_STRIP);
 		segmentsCount = std::max(static_cast<int>(points.size()) + degree - 2, 0);

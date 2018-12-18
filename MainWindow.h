@@ -26,6 +26,7 @@ private:
 	DrawingElement* singlePNTriangle;
 	std::array<DrawingElement*, 8> pnoctahedron;
 	DrawingElement* subdivisionCurve;
+	DrawingElement* mesh3;
 
 public slots:
 	void slotExit();
@@ -39,4 +40,5 @@ public slots:
 	void slotShowPNTriangle();
 	void slotShowOctahedronSphere();
 	void slotShowSubdivisionCurve();
+	void slotOpenMesh3();
 };

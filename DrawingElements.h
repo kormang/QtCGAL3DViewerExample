@@ -4,6 +4,7 @@
 class BSpline;
 class PNtriangle;
 class SubdivisionCurve;
+class Mesh3Triangulation;
 
 class SurfaceMeshDrawingElement : public DrawingElement
 {
@@ -38,5 +39,14 @@ class SubdivisionCurveDrawingElement : public DrawingElement
 public:
     SubdivisionCurveDrawingElement(SubdivisionCurve* subdivisionCurve);
     ~SubdivisionCurveDrawingElement();
+    void draw();
+};
+
+class Mesh3TriangulationDrawingElement : public DrawingElement
+{
+    Mesh3Triangulation* mesh3;
+public:
+    Mesh3TriangulationDrawingElement(Mesh3Triangulation* mesh3);
+    ~Mesh3TriangulationDrawingElement();
     void draw();
 };

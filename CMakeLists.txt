@@ -10,7 +10,7 @@ endif()
 
 set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
 
-find_package(CGAL REQUIRED)
+find_package(CGAL COMPONENTS ImageIO REQUIRED)
 include(${CGAL_USE_FILE})
 
 if (WIN32)
@@ -44,8 +44,11 @@ set(QGLVIEWER_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../libQGLViewer-2.7.1/" CACHE PAT
 find_package(OpenGL REQUIRED)
 #find_package(QGLViewer REQUIRED)
 
-set(SOURCES main.cpp Viewer3D.cpp MainWindow.cpp BSpline.cpp PNTriangle.cpp DrawingElements.cpp SubdivisionCurve.cpp)
-set(HEADERS Viewer3D.h MainWindow.h BSpline.h PNtriangle.h DrawingElements.h SubdivisionCurve.h typedefs.h)
+#set(SOURCES main.cpp Viewer3D.cpp MainWindow.cpp BSpline.cpp PNTriangle.cpp DrawingElements.cpp SubdivisionCurve.cpp Mesh3Triangulation.cpp)
+#set(HEADERS Viewer3D.h MainWindow.h BSpline.h PNtriangle.h DrawingElements.h SubdivisionCurve.h Mesh3Triangulation.h typedefs.h)
+
+set(SOURCES main.cpp Viewer3D.cpp MainWindow.cpp BSpline.cpp PNTriangle.cpp DrawingElements.cpp SubdivisionCurve.cpp Mesh3Triangulation.cpp)
+set(HEADERS Viewer3D.h MainWindow.h BSpline.h PNtriangle.h DrawingElements.h SubdivisionCurve.h Mesh3Triangulation.h typedefs.h)
 qt5_wrap_ui(UI_HEADERS mainwindow.ui)
 
 add_executable(QtCGAL3DViewer ${SOURCES} ${HEADERS} ${UI_HEADERS})

@@ -1,9 +1,11 @@
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include <QFileDialog>
 #include "BSpline.h"
 #include "PNtriangle.h"
 #include "SubdivisionCurve.h"
+#include "Mesh3Triangulation.h"
 #include "DrawingElements.h"
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/convex_hull_3.h>
@@ -15,7 +17,8 @@ MainWindow::MainWindow(QWidget* parent):
 	bsplines({nullptr, nullptr}),
 	singlePNTriangle(nullptr),
 	pnoctahedron({nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}),
-	subdivisionCurve(nullptr)
+	subdivisionCurve(nullptr),
+	mesh3(nullptr)
 {
 	ui->setupUi(this);
 	connect(this->ui->actionExit, SIGNAL(triggered()), this, SLOT(slotExit()));
@@ -29,6 +32,7 @@ MainWindow::MainWindow(QWidget* parent):
 	connect(this->ui->actionShow_PNTriangle, SIGNAL(triggered()), this, SLOT(slotShowPNTriangle()));
 	connect(this->ui->actionShow_octahedron_sphere, SIGNAL(triggered()), this, SLOT(slotShowOctahedronSphere()));
 	connect(this->ui->actionShow_subdivision_curve, SIGNAL(triggered()), this, SLOT(slotShowSubdivisionCurve()));
+	connect(this->ui->actionOpen_mesh_3, SIGNAL(triggered()), this, SLOT(slotOpenMesh3()));
 
 };
 
@@ -105,6 +109,10 @@ void MainWindow::slotShowConvexHull()
 		ui->actionShow_convex_hull->setText(tr("Show convex hull"));
 	} else {
 		const auto points = ui->widget->getPoints();
+		if (points.size() <= 3) {
+			QMessageBox::critical(this, "Too few points", "At least 4 points are needed to compute surface mesh for convex hull.");
+			return;
+		}
 		CGAL::convex_hull_3(points.begin(), points.end(), *result);
 		ui->actionShow_convex_hull->setText(tr("Hide convex hull"));
 		convexHull = new SurfaceMeshDrawingElement(result);
@@ -253,6 +261,24 @@ void MainWindow::slotShowOctahedronSphere()
 	}
 }
 
+void MainWindow::slotOpenMesh3()
+{
+	QString fname = QFileDialog::getOpenFileName(this,
+		tr("Open file"), "", tr("INR (*.inr.gz *.inr);; OFF (*.off)"));
+
+	if (fname.isEmpty()) {
+		return;
+	}
+
+	Mesh3Triangulation* m3t = new Mesh3Triangulation(fname.toStdString().c_str());
+
+	if ((bool)*m3t) {
+		mesh3 = new Mesh3TriangulationDrawingElement(m3t);
+	} else {
+		QMessageBox::critical(this, "Error", "Failed to read file \n" + fname);
+	}
+}
+
 MainWindow::~MainWindow()
 {
 	if (convexHull != nullptr) {
@@ -274,5 +300,10 @@ MainWindow::~MainWindow()
 			delete pnoctahedron[i];
 		}
 	}
+
+	if (mesh3 != nullptr) {
+		delete mesh3;
+	}
+
 	delete ui;
 }

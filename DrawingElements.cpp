@@ -4,6 +4,7 @@
 #include "BSpline.h"
 #include "PNtriangle.h"
 #include "SubdivisionCurve.h"
+#include "Mesh3Triangulation.h"
 
 SurfaceMeshDrawingElement::SurfaceMeshDrawingElement(Surface_mesh* mesh) : mesh(mesh) {}
 SurfaceMeshDrawingElement::~SurfaceMeshDrawingElement()
@@ -64,3 +65,16 @@ void SubdivisionCurveDrawingElement::draw()
 {
     subdivisionCurve->drawSubdivisionCurve();
 }
+
+Mesh3TriangulationDrawingElement::Mesh3TriangulationDrawingElement(Mesh3Triangulation* mesh3): mesh3(mesh3) {}
+
+Mesh3TriangulationDrawingElement::~Mesh3TriangulationDrawingElement()
+{
+    delete mesh3;
+}
+
+void Mesh3TriangulationDrawingElement::draw()
+{
+	mesh3->draw();
+}
+

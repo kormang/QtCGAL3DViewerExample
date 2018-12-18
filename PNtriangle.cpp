@@ -135,7 +135,6 @@ inline void PNtriangle::drawPoint(double u, double v, double w)
 
 void PNtriangle::drawTriangle()
 {
-    double u, v, w;
 	glColor3f(1.0, 0.9, 0.5);
     glBegin(GL_TRIANGLES);
 

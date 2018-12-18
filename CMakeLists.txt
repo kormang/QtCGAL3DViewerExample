@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.1.0)
 project(QtCGAL3DViewer CXX)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+if(MSVC)
+    add_compile_options("/W3")
+else()
+    add_compile_options("-Wall")
+endif()
+
 set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
 
 find_package(CGAL REQUIRED)

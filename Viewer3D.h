@@ -29,7 +29,7 @@ protected:
 	void mouseMoveEvent(QMouseEvent *e);
 
 public:
-	Viewer3D(QWidget* parent): selectedPointIndex(-1), QGLViewer(parent) {}
+	Viewer3D(QWidget* parent): QGLViewer(parent), selectedPointIndex(-1) {}
 
 	void addPoint(float x, float y, float z);
 	void clearPoints();

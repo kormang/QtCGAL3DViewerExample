@@ -25,6 +25,7 @@ private:
 	std::array<DrawingElement*, 2> bsplines;
 	DrawingElement* singlePNTriangle;
 	std::array<DrawingElement*, 8> pnoctahedron;
+	DrawingElement* subdivisionCurve;
 
 public slots:
 	void slotExit();
@@ -37,4 +38,5 @@ public slots:
 	void slotShowBSpline2();
 	void slotShowPNTriangle();
 	void slotShowOctahedronSphere();
+	void slotShowSubdivisionCurve();
 };

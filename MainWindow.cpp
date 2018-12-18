@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include "BSpline.h"
 #include "PNtriangle.h"
+#include "SubdivisionCurve.h"
 #include "DrawingElements.h"
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/convex_hull_3.h>
@@ -13,7 +14,8 @@ MainWindow::MainWindow(QWidget* parent):
 	convexHull(nullptr),
 	bsplines({nullptr, nullptr}),
 	singlePNTriangle(nullptr),
-	pnoctahedron({nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr})
+	pnoctahedron({nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}),
+	subdivisionCurve(nullptr)
 {
 	ui->setupUi(this);
 	connect(this->ui->actionExit, SIGNAL(triggered()), this, SLOT(slotExit()));
@@ -26,6 +28,7 @@ MainWindow::MainWindow(QWidget* parent):
 	connect(this->ui->actionShow_3rd_degree_BSpline, SIGNAL(triggered()), this, SLOT(slotShowBSpline3()));
 	connect(this->ui->actionShow_PNTriangle, SIGNAL(triggered()), this, SLOT(slotShowPNTriangle()));
 	connect(this->ui->actionShow_octahedron_sphere, SIGNAL(triggered()), this, SLOT(slotShowOctahedronSphere()));
+	connect(this->ui->actionShow_subdivision_curve, SIGNAL(triggered()), this, SLOT(slotShowSubdivisionCurve()));
 
 };
 
@@ -112,8 +115,8 @@ void MainWindow::slotShowConvexHull()
 void MainWindow::slotShowBSpline3()
 {
 	if (bsplines[1] == nullptr) {
-		bsplines[1] = new BSpline(ui->widget->getPoints(), 3, ui->cbClosed->isChecked());
-		ui->widget->addBSpline(bsplines[1]);
+		bsplines[1] = new BSplineDrawingElement(new BSpline(ui->widget->getPoints(), 3, ui->cbClosed->isChecked()));
+		ui->widget->addElement(bsplines[1]);
 		ui->actionShow_3rd_degree_BSpline->setText(tr("Hide 3rd degree BSpline"));
 	} else {
 		ui->actionShow_3rd_degree_BSpline->setText(tr("Show 3rd degree BSpline"));
@@ -126,8 +129,8 @@ void MainWindow::slotShowBSpline3()
 void MainWindow::slotShowBSpline2()
 {
 	if (bsplines[0] == nullptr) {
-		bsplines[0] = new BSpline(ui->widget->getPoints(), 2, ui->cbClosed->isChecked());
-		ui->widget->addBSpline(bsplines[0]);
+		bsplines[0] = new BSplineDrawingElement(new BSpline(ui->widget->getPoints(), 2, ui->cbClosed->isChecked()));
+		ui->widget->addElement(bsplines[0]);
 		ui->actionShow_2nd_degree_BSpline->setText(tr("Hide 2nd degree BSpline"));
 	} else {
 		ui->actionShow_2nd_degree_BSpline->setText(tr("Show 2nd degree BSpline"));
@@ -164,6 +167,28 @@ void MainWindow::slotShowPNTriangle()
 		));
 		ui->widget->addElement(singlePNTriangle);
 		ui->actionShow_PNTriangle->setText(tr("Hide PNTriangle"));
+	}
+}
+
+void MainWindow::slotShowSubdivisionCurve()
+{
+	if (subdivisionCurve != nullptr) {
+		ui->widget->removeElement(subdivisionCurve);
+		delete subdivisionCurve;
+		subdivisionCurve = nullptr;
+		ui->actionShow_subdivision_curve->setText(tr("Show subdivision curve"));
+	} else {
+		bool success = false;
+		int divLevel = QString(ui->leTessLevel->text()).toInt(&success);
+		if (!success) {
+			divLevel = 0;
+		}
+		subdivisionCurve = new SubdivisionCurveDrawingElement(new SubdivisionCurve(
+			ui->widget->getPoints(),
+			divLevel
+		));
+		ui->widget->addElement(subdivisionCurve);
+		ui->actionShow_subdivision_curve->setText(tr("Hide subdivision curve"));
 	}
 }
 

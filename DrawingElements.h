@@ -3,6 +3,7 @@
 
 class BSpline;
 class PNtriangle;
+class SubdivisionCurve;
 
 class SurfaceMeshDrawingElement : public DrawingElement
 {
@@ -28,5 +29,14 @@ class PNtriangleDrawingElement : public DrawingElement
 public:
     PNtriangleDrawingElement(PNtriangle* pntriangle);
     ~PNtriangleDrawingElement();
+    void draw();
+};
+
+class SubdivisionCurveDrawingElement : public DrawingElement
+{
+    SubdivisionCurve* subdivisionCurve;
+public:
+    SubdivisionCurveDrawingElement(SubdivisionCurve* subdivisionCurve);
+    ~SubdivisionCurveDrawingElement();
     void draw();
 };

@@ -9,8 +9,8 @@ protected:
 typedef std::vector<double> coefs_t;
 
 	std::vector<coefs_t> coefs;
-    int degree;
-	int stepCount;
+    uint degree;
+	uint stepCount;
 	const Points3& points;
 	coefs_t calcSplineCoef3(double t);
 	coefs_t calcSplineCoef2(double t);
@@ -19,6 +19,6 @@ typedef std::vector<double> coefs_t;
 public:
 	bool closed;
 	void drawSplineCurve();
-	BSpline(const Points3& points, int degree, bool closed = false, int stepCount = 10);
+	BSpline(const Points3& points, uint degree, bool closed = false, uint stepCount = 10);
 	~BSpline(){};
 };

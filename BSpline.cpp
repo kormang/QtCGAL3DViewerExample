@@ -1,6 +1,10 @@
 #include "BSpline.h"
 #define GL_SILENCE_DEPRECATION
+#ifdef __APPLE__
 #include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
 
 inline int clamp(int val, int minVal, int maxVal)
 {
@@ -32,12 +36,12 @@ BSpline::coefs_t BSpline::calcSplineCoef2(double t)
 	return coefs;
 }
 
-BSpline::BSpline(const Points3& points, int degree, bool closed, int stepCount)
+BSpline::BSpline(const Points3& points, uint degree, bool closed, uint stepCount)
 : degree(degree), stepCount(stepCount), points(points), closed(closed)
 {
     // Генерация коэффициентов B-сплайна
 	coefs = std::vector<coefs_t>();
-	for (int i = 0; i < stepCount; i++) {
+	for (uint i = 0; i < stepCount; i++) {
 		coefs_t coef = degree == 3
             ? calcSplineCoef3(i / (double)stepCount)
             : calcSplineCoef2(i / (double)stepCount);
@@ -47,7 +51,7 @@ BSpline::BSpline(const Points3& points, int degree, bool closed, int stepCount)
 
 void BSpline::drawSegment3(int segNum)
 {
-	int pNum = points.size();
+	int pNum = (int)points.size();
 	int p0, p1, p2, p3;
 	//Вычисление номеров вершин для построения сплайна
 	if (closed == false) {
@@ -63,7 +67,7 @@ void BSpline::drawSegment3(int segNum)
 	}
 	// По заранее вычисленным коэффициентам
 	// Вычисляем промежуточные точки сплайна
-	for (int i = 0; i < stepCount; i++) {
+	for (uint i = 0; i < stepCount; i++) {
 		double x = coefs.at(i)[0] * points[p0].x()
 			+ coefs.at(i)[1] * points[p1].x()
 			+ coefs.at(i)[2] * points[p2].x()
@@ -83,7 +87,7 @@ void BSpline::drawSegment3(int segNum)
 
 void BSpline::drawSegment2(int segNum)
 {
-	int pNum = points.size();
+	int pNum = (int)points.size();
 	int p0, p1, p2;
 	//Вычисление номеров вершин для построения сплайна
 	if (closed == false) {
@@ -97,7 +101,7 @@ void BSpline::drawSegment2(int segNum)
 	}
 	// По заранее вычисленным коэффициентам
 	// Вычисляем промежуточные точки сплайна
-	for (int i = 0; i < stepCount; i++) {
+	for (uint i = 0; i < stepCount; i++) {
 		double x = coefs.at(i)[0] * points[p0].x()
 			+ coefs[i][1] * points[p1].x()
 			+ coefs[i][2] * points[p2].x();
@@ -119,9 +123,9 @@ void BSpline::drawSplineCurve()
 	glColor4f(1.0f, 1.0f, 0.33f * degree, 1.0f);
 	if (closed == false) {
 		glBegin(GL_LINE_STRIP);
-		segmentsCount = std::max(static_cast<int>(points.size()) + degree - 2, 0);
+		segmentsCount = std::max((int)(points.size() + degree) - 2, 0);
 	} else {
-		segmentsCount = points.size(); //Сегмент между первой и последней вершиной
+		segmentsCount = (int)points.size(); //Сегмент между первой и последней вершиной
 		glBegin(GL_LINE_LOOP);
 	}
 

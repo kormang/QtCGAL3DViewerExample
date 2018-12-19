@@ -1,6 +1,10 @@
 #define GL_SILENCE_DEPRECATION
 #include "Viewer3D.h"
+#ifdef __APPLE__
 #include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
 #include <QMessageBox>
 #include <random>
 #include <cmath>
@@ -59,7 +63,7 @@ void Viewer3D::draw()
 	glPointSize(10.0f);
 	glColor3f(0.0f, 1.0f, 0.0f);
 	glBegin(GL_POINTS);
-	for (int i = 0; i < points.size(); ++i) {
+	for (uint i = 0; i < points.size(); ++i) {
 		glVertex3f(points[i].x(), points[i].y(), points[i].z());
 	}
 	glEnd();
@@ -75,7 +79,7 @@ void Viewer3D::postSelection(const QPoint & point)
 	qglviewer::Vec orig, dir;
 	camera()->convertClickToLine(point, orig, dir);
 	std::vector<int> selected;
-	for (int i = 0; i < points.size(); i++) {
+	for (uint i = 0; i < points.size(); i++) {
 		qglviewer::Vec point(
 			points[i].x() - orig.x,
 			points[i].y() - orig.y,
@@ -90,7 +94,7 @@ void Viewer3D::postSelection(const QPoint & point)
 	if (selected.size() > 0) {
 		// Отображение результата в отдельном окне
 		QString result;
-		for (int i = 0; i < selected.size(); i++) {
+		for (uint i = 0; i < selected.size(); i++) {
 			QString tmp = "Vertex number " + QString::number(selected[i]) + ": " +
 				QString::number(points[selected[i]].x()) + " " +
 				QString::number(points[selected[i]].y()) + " " +
@@ -134,7 +138,7 @@ void Viewer3D::mousePressEvent(QMouseEvent *e) {
 		camera()->convertClickToLine(e->pos(), orig, dir);
 		int selected = -1;
 		float maxCos = 0.0f;
-		for (int i = 0; i < points.size(); i++)
+		for (uint i = 0; i < points.size(); i++)
 		{
 			qglviewer::Vec point(
 				points[i].x() - orig.x,

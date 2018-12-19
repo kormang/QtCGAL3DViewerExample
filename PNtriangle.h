@@ -2,7 +2,11 @@
 #include "typedefs.h"
 #include <math.h>
 #define GL_SILENCE_DEPRECATION
+#ifdef __APPLE__
 #include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
 
 class PNtriangle
 {

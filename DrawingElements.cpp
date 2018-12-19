@@ -1,5 +1,9 @@
 #define GL_SILENCE_DEPRECATION
+#ifdef __APPLE__
 #include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
 #include "DrawingElements.h"
 #include "BSpline.h"
 #include "PNtriangle.h"
@@ -77,4 +81,3 @@ void Mesh3TriangulationDrawingElement::draw()
 {
 	mesh3->draw();
 }
-

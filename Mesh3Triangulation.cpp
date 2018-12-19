@@ -1,5 +1,9 @@
 #define GL_SILENCE_DEPRECATION
+#ifdef __APPLE__
 #include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
 #include "Mesh3Triangulation.h"
 
 // To avoid verbose function and named parameters call

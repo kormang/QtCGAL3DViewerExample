@@ -1,6 +1,6 @@
 #pragma once
 #include <QGLViewer/qglviewer.h>
-#include <Qstring>
+#include <QString>
 
 #include "typedefs.h"
 

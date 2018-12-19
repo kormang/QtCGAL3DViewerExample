@@ -285,7 +285,7 @@ MainWindow::~MainWindow()
 		delete convexHull;
 	}
 
-	for (int i = 0; i < bsplines.size(); ++i) {
+	for (uint i = 0; i < bsplines.size(); ++i) {
 		if (bsplines[i] != nullptr) {
 			delete bsplines[i];
 		}
@@ -295,7 +295,7 @@ MainWindow::~MainWindow()
 		delete singlePNTriangle;
 	}
 
-	for (int i = 0; i < pnoctahedron.size(); ++i) {
+	for (uint i = 0; i < pnoctahedron.size(); ++i) {
 		if (pnoctahedron[i] != nullptr) {
 			delete pnoctahedron[i];
 		}

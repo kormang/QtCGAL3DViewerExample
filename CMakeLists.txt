@@ -37,17 +37,18 @@ set(CMAKE_AUTOUIC ON)
 find_package(Qt5 CONFIG REQUIRED Widgets Xml OpenGL)
 
 set(QGLVIEWER_LIB_DIR "${CMAKE_SOURCE_DIR}/../libQGLViewer-2.7.1/QGLViewer/" CACHE PATH "Path to QGLViewer library")
-find_library(QGLVIEWER_LIB NAMES ${CMAKE_SHARED_LIBRARY_PREFIX}QGLViewer${CMAKE_SHARED_LIBRARY_SUFFIX} HINTS ${QGLVIEWER_LIB_DIR} PATHS ${QGLVIEWER_LIB_DIR})
-
+#find_library(QGLVIEWER_LIBRARIES NAMES ${CMAKE_SHARED_LIBRARY_PREFIX}QGLViewer${CMAKE_SHARED_LIBRARY_SUFFIX} HINTS ${QGLVIEWER_LIB_DIR} PATHS ${QGLVIEWER_LIB_DIR})
+#if ($(QGLVIEWER_LIBRARIES) MATCHES "QGLVIEWER_LIBRARIES-NOTFOUND")
+    find_library(QGLVIEWER_LIBRARIES NAMES libQGLViewer-qt5.so HINTS ${QGLVIEWER_LIB_DIR} PATHS ${QGLVIEWER_LIB_DIR})
+#endif()
 set(QGLVIEWER_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../libQGLViewer-2.7.1/" CACHE PATH "Path to QGLViewer include files")
 
-find_package(OpenGL REQUIRED)
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 #find_package(QGLViewer REQUIRED)
 
-#set(SOURCES main.cpp Viewer3D.cpp MainWindow.cpp BSpline.cpp PNTriangle.cpp DrawingElements.cpp SubdivisionCurve.cpp Mesh3Triangulation.cpp)
-#set(HEADERS Viewer3D.h MainWindow.h BSpline.h PNtriangle.h DrawingElements.h SubdivisionCurve.h Mesh3Triangulation.h typedefs.h)
+find_package(OpenGL REQUIRED)
 
-set(SOURCES main.cpp Viewer3D.cpp MainWindow.cpp BSpline.cpp PNTriangle.cpp DrawingElements.cpp SubdivisionCurve.cpp Mesh3Triangulation.cpp)
+set(SOURCES main.cpp Viewer3D.cpp MainWindow.cpp BSpline.cpp PNtriangle.cpp DrawingElements.cpp SubdivisionCurve.cpp Mesh3Triangulation.cpp)
 set(HEADERS Viewer3D.h MainWindow.h BSpline.h PNtriangle.h DrawingElements.h SubdivisionCurve.h Mesh3Triangulation.h typedefs.h)
 qt5_wrap_ui(UI_HEADERS mainwindow.ui)
 
@@ -56,7 +57,7 @@ target_link_libraries(QtCGAL3DViewer
     PRIVATE
     ${CGAL_LIBS}
     Qt5::Widgets Qt5::Xml Qt5::OpenGL
-    ${QGLVIEWER_LIB}
+    ${QGLVIEWER_LIBRARIES}
     ${OPENGL_LIBRARIES}
 )
 target_include_directories(QtCGAL3DViewer PUBLIC ${OPENGL_INCLUDE_DIR} ${QGLVIEWER_INCLUDE_DIR})

@@ -10,7 +10,7 @@ endif()
 
 set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
 
-find_package(CGAL COMPONENTS ImageIO REQUIRED)
+find_package(CGAL COMPONENTS Core ImageIO Qt5 REQUIRED)
 include(${CGAL_USE_FILE})
 
 if (WIN32)

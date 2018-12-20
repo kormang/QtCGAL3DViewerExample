@@ -7,6 +7,9 @@
 #include <CGAL/Labeled_mesh_domain_3.h>
 #include <CGAL/make_mesh_3.h>
 #include <CGAL/Image_3.h>
+
+class QWidget;
+
 // Domain
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 typedef CGAL::Labeled_mesh_domain_3<K> Mesh_domain;
@@ -29,4 +32,5 @@ public:
     Mesh3Triangulation(const char* filename);
     explicit operator bool() const;
     void draw();
+    QWidget* createVisualisationWindow(QWidget* parent);
 };

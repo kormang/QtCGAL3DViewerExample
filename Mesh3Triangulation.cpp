@@ -1,3 +1,5 @@
+#define CGAL_USE_BASIC_VIEWER
+#define QT_NO_KEYWORDS
 #define GL_SILENCE_DEPRECATION
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
@@ -5,13 +7,19 @@
 #include <GL/gl.h>
 #endif
 #include "Mesh3Triangulation.h"
+#include <CGAL/draw_triangulation_3.h>
+#include <cmath>
+
+#include <QPushButton>
 
 // To avoid verbose function and named parameters call
 using namespace CGAL::parameters;
 
-Mesh3Triangulation::Mesh3Triangulation(const char* filename) : success(false)
+Mesh3Triangulation::Mesh3Triangulation(const char* filename) :
+success(false)
 {
     CGAL::Image_3 image;
+    std::cerr << "reading..." << std::endl;
     if(!image.read(filename)){
         std::cerr << "Error: Cannot read file " <<  filename << std::endl;
         return;
@@ -21,7 +29,9 @@ Mesh3Triangulation::Mesh3Triangulation(const char* filename) : success(false)
     // Mesh criteria
     Mesh_criteria criteria(facet_angle=30, facet_size=6, facet_distance=4,
                             cell_radius_edge_ratio=3, cell_size=8);
+    std::cerr << "making mesh..." << std::endl;
     c3t3 = CGAL::make_mesh_3<C3t3>(domain, criteria);
+    std::cerr << "done!" << std::endl;
 
     success = true;
 }
@@ -33,50 +43,35 @@ Mesh3Triangulation::operator bool() const
 
 void Mesh3Triangulation::draw()
 {
-	glLineWidth(10.0f);
+	glLineWidth(1.0f);
 	glColor4f(0.5f, 0.0f, 0.0f, 0.5f);
 
-/*
-	BOOST_FOREACH(c3t3::Face_index f, faces(*c3t3)) {
-		glBegin(GL_LINE_LOOP);
-		CGAL::Vertex_around_face_iterator<C3t3> vbegin, vend;
-		for (boost::tie(vbegin, vend) = vertices_around_face(mesh->halfedge(f), *mesh);
-				vbegin != vend;
-				++vbegin) {
-			const Point_3& p = mesh->point(*vbegin);
-			glVertex3f(p.x(), p.y(), p.z());
-		}
-		glEnd();
-	}
-*/
-    glBegin(GL_TRIANGLES);
+    // Completely slow implementation!!!
     Tr& tr = c3t3.triangulation();
-    for (Tr::Facet_iterator it = tr.facets_begin(); it != tr.facets_end() ; it++ ) {
-        // add_point_in_face(fh->first->vertex((fh->second+1)%4)->point());
-        // add_point_in_face(fh->first->vertex((fh->second+2)%4)->point());
-        // add_point_in_face(fh->first->vertex((fh->second+3)%4)->point());
+    for (Tr::Finite_edges_iterator it = tr.finite_edges_begin(); it != tr.finite_edges_end() ; it++ ) {
 
-        // for ( int ti = 0 ; ti < 4 ; ti++ ) {
-        //     for ( int i = 0 ; i < 3 ; i++ ) {
-        //         Point_3 point = cit->vertex((ti+i)%4)->point();
 
-        //     }
-        // }
+        Point_3 p1 = Point_3(it->first->vertex((it->second + 1) % 3)->point());
+        Point_3 p2 = Point_3(it->first->vertex((it->second + 2) % 3)->point());
 
-        for (int i = 1; i <= 3; ++i) {
-            it->first->vertex((it->second + i)%4)->point();
-            // glVertex3f(p.x(), p.y(), p.z());
+        // All hacky just to make it work
+
+        if (abs(p2.x()) + abs(p2.y()) + abs(p2.z()) <= 0.05f
+            || abs(p1.x()) + abs(p1.y()) + abs(p1.z()) <= 0.05f) {
+            continue;
         }
+
+        glBegin(GL_LINES);
+        glVertex3f(p1.x() / 100.0f, p1.y() / 100.0f, p1.z() / 100.0f);
+        glVertex3f(p2.x() / 100.0f, p2.y() / 100.0f, p2.z() / 100.0f);
+        glEnd();
+
     }
-    glEnd();
 
-    // for (Tr::Face_index f : tr.faces()) {
-    //     glBegin(GL_LINE_LOOP);
-    //     for (Tr::Vertex_index i : tr.vertices_around_face()) {
-    //         const Point_3& p = mesh.point(i);
-    //         glVertex3f(p.x(), p.y(), p.z());
-    //     }
-    //     glEnd();
-    // }
+}
 
+QWidget* Mesh3Triangulation::createVisualisationWindow(QWidget* parent)
+{
+    using namespace CGAL;
+    return new SimpleTriangulation3ViewerQt<Tr, DefaultColorFunctorT3>(parent, c3t3.triangulation());
 }

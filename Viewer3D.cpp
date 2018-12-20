@@ -60,7 +60,7 @@ void Viewer3D::generateSphere(const Point_3& center, float radius)
 
 void Viewer3D::draw()
 {
-	glPointSize(10.0f);
+	glPointSize(5.0f);
 	glColor3f(0.0f, 1.0f, 0.0f);
 	glBegin(GL_POINTS);
 	for (uint i = 0; i < points.size(); ++i) {

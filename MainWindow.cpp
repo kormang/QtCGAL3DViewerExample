@@ -274,6 +274,10 @@ void MainWindow::slotOpenMesh3()
 
 	if ((bool)*m3t) {
 		mesh3 = new Mesh3TriangulationDrawingElement(m3t);
+		ui->widget->addElement(mesh3);
+		QWidget* vis = m3t->createVisualisationWindow(ui->widget);
+		vis->resize(ui->widget->width(), ui->widget->height());
+		vis->show();
 	} else {
 		QMessageBox::critical(this, "Error", "Failed to read file \n" + fname);
 	}
